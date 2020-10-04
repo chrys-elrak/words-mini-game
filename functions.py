@@ -1,19 +1,27 @@
-import json, random, csv, sys, os
+import csv
+import json
+import os
+import random
+import sys
+
 
 def open_json(file):
 	with open(file, encoding='utf-8') as json_file:
 		json_data = json.load(json_file)
 	return json_data
 
-def write_json(data):
+
+def write_json(file):
 	with open(file, mode='w') as json_file:
-		json_file.write(json.dumps(data, sort_keys=True, indent=4))
+		json_file.write(json.dumps(file, sort_keys=True, indent=4))
+
 
 def choose_and_shuffle(data):
 	x_word_str = random.choice(data)
 	x_word_list = list(x_word_str)
 	random.shuffle(x_word_list)
-	return  x_word_list, x_word_str
+	return x_word_list, x_word_str
+
 
 def find_like(text, mots):
 	text = text.lower()
@@ -23,7 +31,7 @@ def find_like(text, mots):
 		_tmp = {}
 		for char in mot:
 			if char in text:
-				if _tmp.get(mot) == None:
+				if _tmp.get(mot) is None:
 					_tmp[mot] = []
 					_tmp[mot].append(char)
 				else:
@@ -32,6 +40,7 @@ def find_like(text, mots):
 					if len(mot) == len(_tmp[mot]) and mot != text:
 						res.append(mot)
 	return res, text
+
 
 def set_score(score, player_name):
 	data = []
@@ -44,7 +53,7 @@ def set_score(score, player_name):
 			data.append(row) # storing data as list
 
 		try:
-			p =  [(k, v )for k ,v in enumerate(data) if player_name in v][0]
+			p = [(k, v)for k, v in enumerate(data) if player_name in v][0]
 		except IndexError:
 			p = None
 		finally:
@@ -62,6 +71,7 @@ def set_score(score, player_name):
 					writer = csv.writer(score_file_a, delimiter=',', quotechar='|')
 					writer.writerow([player_name, score])
 
+
 def get_score(player_name):
 	data = []
 	with open('score.csv') as score_file_r:
@@ -69,7 +79,7 @@ def get_score(player_name):
 		for row in reader:
 			data.append(row)
 		try:
-			p =  [(k, v )for k ,v in enumerate(data) if player_name in v][0]
+			p = [(k, v)for k, v in enumerate(data) if player_name in v][0]
 		except IndexError:
 			p = None
 		finally:
@@ -77,8 +87,14 @@ def get_score(player_name):
 				return float(data[p[0]][-1])
 			else:
 				return 0
+
+
 def clear():
 	if sys.platform == "linux":
 		os.system('clear')
 	elif sys.platform == "win32":
 		os.system('cls')
+
+
+if __name__ == "__main__":
+	print("You can not execute this file")
