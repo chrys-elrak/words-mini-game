@@ -81,7 +81,7 @@ When you will quit the program, it will ask you if you want to save or not your 
 
     ![](https://avatars.githubusercontent.com/u/40733956?v=4)
 
-        My name is Chrys and I'm from Madagascar (🇲🇬). I'm the founder od the GDSC at my university, selftaught and curious, I love programming and creating stuff.
+        My name is Chrys and I'm from Madagascar (🇲🇬). I'm the founder of the GDSC at my university, selftaught and curious, I love programming and creating stuff.
         I create this project just for fun.
     - [Linkedin](https://www.linkedin.com/in/chrysrakk/)
     - [Twitter](https://twitter.com/Chrys_elrak/)
