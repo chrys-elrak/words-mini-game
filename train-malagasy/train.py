@@ -32,6 +32,7 @@ def load_txt(f_input):
     words = []
 
     for word in words_list:
+        # Escape characters
         word = (word.strip('\ufeff.():;,“"-«»…!0123456789:*=<>')).lower()
         if word not in words and len(word) > 1:
             words.append(word)
