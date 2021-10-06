@@ -1,5 +1,8 @@
 # coding:utf-8
-import random, os, sys
+import random
+import os
+import termcolor
+import pyfiglet
 from functions import *
 
 # 22740 words
@@ -13,13 +16,14 @@ from functions import *
 
 # variables
 print(f"""{'*' * os.get_terminal_size().columns}
-{' ' * round(os.get_terminal_size().columns // 2 - 6)}CHRYS RAKOTONIMANANA
+{' ' * round(os.get_terminal_size().columns // 2 - 6)}
+{pyfiglet.figlet_format('WORDS GAME')}
 {'*' * os.get_terminal_size().columns}
-Entrer votre choix :
+{termcolor.colored('?', 'yellow')} Entrer votre choix:
 	1) Malagasy
 	2) Français
 """)
-lang = ((input('>>> ')).strip()).lower()
+lang = ((input('> ')).strip()).lower()
 if lang == '2':
     data = open_json('./mots.json')
 elif lang == '1':
@@ -27,15 +31,18 @@ elif lang == '1':
 else:
     print("Choice not recognized")
     exit(1)
-player_name = input('Entrer votre nom : ').lower().strip()
+player_name = input(termcolor.colored(
+    'Entrer votre nom: ', 'yellow')).lower().strip()
 continuer = None
 score = get_score(player_name)
 
 # main program
 while True:
 
-    x_word_list, x_word_str = choose_and_shuffle(data)  # choose one and shuffle data
-    res, text = find_like(str(x_word_list), data)  # get all possible words with the main words choosen before
+    x_word_list, x_word_str = choose_and_shuffle(
+        data)  # choose one and shuffle data
+    # get all possible words with the main words choosen before
+    res, text = find_like(str(x_word_list), data)
     # variables
     to_find, w_finded, b_finded, n = [], [], [], random.randrange(2, 5)
 
@@ -56,25 +63,31 @@ while True:
 
         # -------------------------------------------------
         print('-' * os.get_terminal_size().columns, end='')
-        print(f"MOT MELANGER  : >>> {(txt).upper()} <<<")
-        print(f'SCORE         : {score}')
-        print(f'NOMBRE DE MOT A TROUVER : {len(to_find)}')
+        print(
+            f"{termcolor.colored('MOT MELANGER', 'yellow', attrs=['underline'])}            : {termcolor.colored((txt).upper(), 'cyan',)}")
+        print(
+            f"{termcolor.colored('SCORE', 'yellow', attrs=['underline'])}                   : {score}")
+        print(
+            f"{termcolor.colored('NOMBRE DE MOT A TROUVER', 'yellow', attrs=['underline'])} : {len(to_find)}")
         if len(b_finded):
-            print(f"BONUS TROUVER : {b_finded}")
+            print(
+                f"{termcolor.colored('BONUS TROUVER', 'yellow', attrs=['underline'])} : {b_finded}")
         if len(w_finded):
-            print(f"MOT TROUVER   : {w_finded}")
+            print(
+                f"{termcolor.colored('MOT TROUVER', 'yellow', attrs=['underline'])}   : {termcolor.colored(w_finded, attrs=['bold'])}")
         print('-' * os.get_terminal_size().columns, end='\n')
         # -------------------------------------------------
 
-        print('Entrer le mot qui vous vient à l\'ésprit\nTapez :\n"." pour actualisez le mot\n"?" pour passer\n!" pour '
-              'quitter')
-        user_res = ((input('>>> ')).lower()).strip()
+        print(
+            f'''Entrer le mot qui vous vient à l'ésprit, Tapez :\n{termcolor.colored("*", 'red')} pour actualiser\n{termcolor.colored("?", 'yellow')} pour passer\n{termcolor.colored("!", 'green')} pour quitter'''
+        )
+        user_res = ((input('> ')).lower()).strip()
         clear()
         if user_res == '':
             print('Veuillez au moins entrer quelque chose !')
         # SHUFFLE
-        elif user_res == '.':
-            print('Acualisation ...')
+        elif user_res == '*':
+            print(termcolor.colored('Acualisation ...', 'cyan'))
             random.shuffle(x_word_list)
         # QUIT
         elif user_res == '!':
@@ -84,34 +97,36 @@ while True:
         # HELP
         elif user_res == '?':
             if (score - 1) > 0:
-                print('Vous ête perdu ?')
+                print(f'{termcolor.colored("?", "yellow")} Vous ête perdu')
                 show = random.choice(to_find)
                 w_finded.append(show)
                 to_find.remove(show)
                 score -= 1
-                print(f'VOILA : {show}')
+                print(f"VOILA : {termcolor.colored(show, attrs=['bold'])}")
             else:
-                print('Désolé, Je ne peux pas vous aider, vous n\'avez pas assez de score :( ')
+                print(
+                    'Désolé, Je ne peux pas vous aider, vous n\'avez pas assez de score :( ')
         # BONUS
         elif user_res in res and user_res not in to_find and user_res not in b_finded:
             b_finded.append(user_res)
             res.remove(user_res)
             score += .5
-            print('BONUS')
+            print(termcolor.colored('BONUS', 'green'))
         # TRUTH
         elif user_res in to_find and user_res not in w_finded:
             w_finded.append(user_res)
             to_find.remove(user_res)
             score += round(len(user_res) / 2)
-            print('VRAIE')
+            print(termcolor.colored('VRAIE', 'green'))
         # WRONG
         else:
             if user_res in w_finded or user_res in b_finded:
-                print('Déjà tapez')
+                print(termcolor.colored('Déjà tapez', 'magenta'))
             else:
-                print('FAUX')
+                print(termcolor.colored('FAUX', 'red'))
     if continuer is None:
-        continuer = input('Voulez vous continuer ? (Oui / Non) : ').lower().strip()
+        continuer = input(
+            'Voulez vous continuer ? (Oui / Non) : ').lower().strip()
         if continuer == 'non':
             break
         else:
@@ -119,7 +134,7 @@ while True:
     else:
         break
 print("Choisi une options :\n\t1 ) Quitter et Sauvegarder\n\t2 ) Quitter")
-o = input(">>> ").lower().strip()
+o = input("> ").lower().strip()
 if o == '1':
     set_score(score, player_name)
 print('Fin de la partie, Au revoir !')
