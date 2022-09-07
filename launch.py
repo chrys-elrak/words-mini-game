@@ -2,7 +2,6 @@
 import random
 import os
 import termcolor
-import pyfiglet
 from functions import *
 
 # 22740 words
@@ -14,25 +13,8 @@ from functions import *
 	* Description : Je me suis inspiré du jeux Word Charm, nottament sur mobile. Je voulais crée un jeux similaires, mais sur le terminal donc sans GUI.
 """
 
-# variables
-print(f"""{'*' * os.get_terminal_size().columns}
-{' ' * round(os.get_terminal_size().columns // 2 - 6)}
-{pyfiglet.figlet_format('WORDS GAME')}
-{'*' * os.get_terminal_size().columns}
-{termcolor.colored('?', 'yellow')} Entrer votre choix:
-	1) Malagasy
-	2) Français
-""")
-lang = ((input('> ')).strip()).lower()
-if lang == '2':
-    data = open_json('./mots.json')
-elif lang == '1':
-    data = open_json('./ohabolana.json')
-else:
-    print("Choice not recognized")
-    exit(1)
-player_name = input(termcolor.colored(
-    'Entrer votre nom: ', 'yellow')).lower().strip()
+data = get_lang()
+player_name = input(termcolor.colored('Entrer votre nom: ', 'yellow')).lower().strip()
 continuer = None
 score = get_score(player_name)
 
@@ -133,8 +115,5 @@ while True:
             continuer = None
     else:
         break
-print("Choisi une options :\n\t1 ) Quitter et Sauvegarder\n\t2 ) Quitter")
-o = input("> ").lower().strip()
-if o == '1':
-    set_score(score, player_name)
-print('Fin de la partie, Au revoir !')
+
+save_prompt(score, player_name)

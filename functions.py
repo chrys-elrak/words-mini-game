@@ -3,7 +3,37 @@ import json
 import os
 import random
 import sys
+import pyfiglet
+import termcolor
 
+def save_prompt(score, player_name):
+    print("Choisi une options :\n\t1 ) Quitter et Sauvegarder\n\t2 ) Quitter")
+    o = input("> ").lower().strip()
+    if o == '1':
+        set_score(score, player_name)
+    print('Fin de la partie, Au revoir !')
+
+def _print_divider(divider = '*', color = 'yellow'):
+    print( termcolor.colored(divider, color) * os.get_terminal_size().columns)
+
+def _print_header():
+    _print_divider()
+    print(f"""{pyfiglet.figlet_format('WORDS GAME')}""")
+    _print_divider()
+
+def get_lang():
+    _print_header()
+    print(f"""{termcolor.colored('?', 'yellow')} Entrer votre choix:
+    1) Malagasy
+    2) Français""")
+    lang = ((input('> ')).strip()).lower()
+    if lang == '2':
+        return open_json('./mots.json')
+    elif lang == '1':
+        return open_json('./ohabolana.json')
+    else:
+        print("Choice not recognized")
+        exit(1)
 
 def open_json(file):
     with open(file, encoding='utf-8') as json_file:
@@ -62,17 +92,16 @@ def set_score(score, player_name):
                 data[p[0]][-1] = float(score)
 
                 with open('score.csv', mode='w', newline='\n') as score_file_w:
-                    writer = csv.writer(
-                        score_file_w, delimiter=',', quotechar='|')
                     for d in data:
-                        writer.writerow(d)
+                        write_csv(score_file_w, d)
             else:
                 # add new user with his score
                 with open('score.csv', mode='a', newline='\n') as score_file_a:
-                    writer = csv.writer(
-                        score_file_a, delimiter=',', quotechar='|')
-                    writer.writerow([player_name, score])
+                    write_csv(score_file_a, [player_name, score])
 
+def write_csv(file, data):
+    writer = csv.writer(file, delimiter=',', quotechar='|')
+    writer.writerow(data)
 
 def get_score(player_name):
     data = []
